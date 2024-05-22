@@ -6,7 +6,7 @@ What issues will you address by cleaning the data?
 
 Queries:
 Below, provide the SQL queries you used to clean your data.
-
+Query # 1
 ```sql
 --example how to structure as sql
 SELECT
