@@ -15,3 +15,16 @@ SELECT
 FROM Some_table
 
 WHERE Some_column = 1
+```
+
+Query #2
+
+```sql
+--example how to structure as sql
+SELECT
+*
+
+FROM Some_table
+
+WHERE Some_column = 1
+```
