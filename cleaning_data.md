@@ -29,3 +29,12 @@ FROM Some_table
 
 WHERE Some_column = 1
 ```
+Query #3
+```sql
+SELECT
+*
+
+FROM Some_table
+
+WHERE Some_column = 1
+```
