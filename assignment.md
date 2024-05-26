@@ -11,7 +11,7 @@ Create a new PostgreSQL database called `ecommerce`. Set up tables for each .csv
 
 CREATE TABLE products (
 	 SKU VARCHAR (20)
-	,ProductName VARCHAR (50)
+	,ProductName VARCHAR (100)
 	,orderedquantity INTEGER
 	,stockLevel INTEGER
 	,restockingLeadTime INTEGER
@@ -21,25 +21,22 @@ CREATE TABLE products (
 	
 
 );
+	
 
 --DROP TABLE sales_by_sku
 
 CREATE TABLE sales_by_sku (
 	 SKU VARCHAR (20)
 	,total_ordered INTEGER
-	,stockLevel INTEGER
-	,restockingLeadTime INTEGER
-	,sentimentScore FLOAT
-	,sentimentMagnitude FLOAT
-	,PRIMARY KEY (SKU)
+
 );
 
-
+--DROP TABLE sales_report
 
 CREATE TABLE sales_report (
 	 SKU VARCHAR (20)
 	,total_ordered INTEGER
-	,ProductName VARCHAR (50)
+	,ProductName VARCHAR (100)
 	,stockLevel INTEGER
 	,restockingLeadTime INTEGER
 	,sentimentScore FLOAT
@@ -50,7 +47,7 @@ CREATE TABLE sales_report (
 
 );
 
---DROP TABLE all_sessions;
+--DROP TABLE all_Sessions
 
 CREATE TABLE all_Sessions (
 	 fullVisitorId FLOAT
@@ -71,26 +68,46 @@ CREATE TABLE all_Sessions (
 	,productPrice FLOAT
 	,productRevenue FLOAT
 	,productSKU VARCHAR (20)
-	,v2ProductName VARCHAR (50)
+	,v2ProductName VARCHAR (100)
 	,v2ProductCategory VARCHAR (50)
 	,productVariant VARCHAR (50)
 	,currencyCode VARCHAR (3)
 	,itemQuantity INT
 	,itemRevenue FLOAT
 	,transactionRevenue FLOAT
-	,transactionId FLOAT
-	,pageTitle VARCHAR (50)
+	,transactionId VARCHAR (100)
+	,pageTitle VARCHAR (1500)
 	,searchKeyword VARCHAR (50)
 	,pagePathLevel1 VARCHAR (50)
 	,eCommerceAction_type INT
 	,eCommerceAction_step INT
-	,eCommerceAction_option INT
-	,PRIMARY KEY (visitID)
+	,eCommerceAction_option VARCHAR (100)
+	,PRIMARY KEY (visitID,productSKU,sessiontime)
 	
 
 );
 
---DROP TABLE ANALYTICS
+
+--create staging table fpr data cleaning
+CREATE TABLE ANALYTICS_staging (
+	 visitNumber NUMERIC(21, 0)
+	,visitId FLOAT
+	,visitStartTime FLOAT
+	,sessiondate DATE
+	,fullvisitorId NUMERIC(21, 0)
+	,userid NUMERIC(21, 0)
+	,channelGrouping VARCHAR (50)
+	,socialEngagementType VARCHAR (50)
+	,units_sold INT
+	,pageviews INT
+	,timeonsite FLOAT
+	,bounces INT
+	,revenue FLOAT
+	,unit_price FLOAT
+)
+
+
+--create actual analytics table you will place cleaned data into
 CREATE TABLE ANALYTICS (
 	 visitNumber NUMERIC(21, 0)
 	,visitId FLOAT
@@ -106,9 +123,27 @@ CREATE TABLE ANALYTICS (
 	,bounces INT
 	,revenue FLOAT
 	,unit_price FLOAT
-	,PRIMARY KEY (visitID)
+	,PRIMARY KEY (visitID,unit_price)
 )
 
+--clean and push data to the actual analytics table
+WITH cleaned_data AS (
+    SELECT DISTINCT ON (visitId, unit_price) -- ensuring no duplicate primary keys
+        visitNumber, visitId, visitStartTime, sessiondate, fullvisitorId, userid, channelGrouping, socialEngagementType, units_sold, pageviews, timeonsite, bounces, revenue, unit_price
+    FROM analytics_staging
+    ORDER BY visitId, unit_price
+)
+INSERT INTO analytics (visitNumber, visitId, visitStartTime, sessiondate, fullvisitorId, userid, channelGrouping, socialEngagementType, units_sold, pageviews, timeonsite, bounces, revenue, unit_price)
+SELECT 
+    visitNumber, visitId, visitStartTime, sessiondate, fullvisitorId, userid, channelGrouping, socialEngagementType, units_sold, pageviews, timeonsite, bounces, revenue, unit_price
+FROM cleaned_data;
+
+-- Step 4: Update unit_price
+UPDATE analytics
+SET unit_price = unit_price / 1000000;
+
+-- Step 5: delete the staging table
+DROP TABLE analytics_staging;
 
 
 
@@ -127,9 +162,26 @@ Apart from this, did you see any other issue that requires cleaning? Be sure to 
 
 In your copy of the **cleaning_data.md** file, describe what issues you addressed by cleaning the data and provide the queries you executed to clean the data.
 
+
+
+UPDATE all_sessions
+SET productprice = productprice / 1000000;
+
+--clean and push data to the actual analytics table, so their is a primary key
+WITH cleaned_data AS (
+    SELECT DISTINCT ON (visitId, unit_price) -- ensuring no duplicate primary keys
+        visitNumber, visitId, visitStartTime, sessiondate, fullvisitorId, userid, channelGrouping, socialEngagementType, units_sold, pageviews, timeonsite, bounces, revenue, unit_price
+    FROM analytics_staging
+    ORDER BY visitId, unit_price
+)
+
+UPDATE analytics
+SET unit_price = unit_price / 1000000;
+
 ## Part 3: Starting with Questions
 
-This database provides data on revenue by product as well as data on how each visitor to the site interacted with the products (when they visited, where they were based, how many pages they viewed, how long they stayed on the site, and the number of transactions they entered).
+This database provides data on revenue by product as well as data on how each visitor to the site interacted with the products (when they visited, where they were git status
+based, how many pages they viewed, how long they stayed on the site, and the number of transactions they entered).
  
 In the **starting_with_questions.md** file there are 5 questions you need to answer using the data. For each question, be sure to include:
 The queries you used to answer the question
