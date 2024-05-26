@@ -4,6 +4,112 @@ Follow the instructions below to complete this project.
 
 Create a new PostgreSQL database called `ecommerce`. Set up tables for each .csv file by following [these instructions](https://www.postgresqltutorial.com/postgresql-tutorial/import-csv-file-into-posgresql-table/)
 
+
+
+
+CREATE TABLE products (
+	 SKU VARCHAR (20)
+	,ProductName VARCHAR (50)
+	,orderedquantity INTEGER
+	,stockLevel INTEGER
+	,restockingLeadTime INTEGER
+	,sentimentScore FLOAT
+	,sentimentMagnitude FLOAT
+	,PRIMARY KEY (SKU)
+	
+
+);
+
+DROP TABLE sales_by_sku
+
+CREATE TABLE sales_by_sku (
+	 SKU VARCHAR (20)
+	,total_ordered INTEGER
+	,stockLevel INTEGER
+	,restockingLeadTime INTEGER
+	,sentimentScore FLOAT
+	,sentimentMagnitude FLOAT
+	,PRIMARY KEY (SKU)
+);
+
+
+
+CREATE TABLE sales_report (
+	 SKU VARCHAR (20)
+	,total_ordered INTEGER
+	,ProductName VARCHAR (50)
+	,stockLevel INTEGER
+	,restockingLeadTime INTEGER
+	,sentimentScore FLOAT
+	,sentimentMagnitude FLOAT
+	,Ratio FLOAT
+	,PRIMARY KEY (SKU)
+	
+
+);
+
+
+CREATE TABLE all_Sessions (
+	 fullVisitorId BIGINT
+	,channelGrouping VARCHAR (25)
+	,sessiontime NUMERIC
+	,country VARCHAR (50)
+	,city VARCHAR (50)
+	,totalTransactionRevenue FLOAT
+	,transactions FLOAT
+	,timeOnSite FLOAT
+	,pageviews INT
+	,sessionQualityDim INT
+	,sessiondate DATE
+	,visitId BIGINT
+	,sessiontype VARCHAR (25)
+	,productRefundAmount FLOAT
+	,productQuantity INT
+	,productPrice FLOAT
+	,productRevenue FLOAT
+	,productSKU VARCHAR (20)
+	,v2ProductName VARCHAR (50)
+	,v2ProductCategory VARCHAR (50)
+	,productVariant VARCHAR (50)
+	,currencyCode VARCHAR (3)
+	,itemQuantity INT
+	,itemRevenue FLOAT
+	,transactionRevenue FLOAT
+	,transactionId FLOAT
+	,pageTitle VARCHAR (50)
+	,searchKeyword VARCHAR (50)
+	,pagePathLevel1 VARCHAR (50)
+	,eCommerceAction_type INT
+	,eCommerceAction_step INT
+	,eCommerceAction_option INT
+	,PRIMARY KEY (visitID)
+	
+
+);
+
+
+CREATE TABLE ANALYTICS (
+	 visitNumber NUMERIC(21, 0)
+	,visitId FLOAT
+	,visitStartTime FLOAT
+	,sessiondate DATE
+	,fullvisitorId NUMERIC(21, 0)
+	,userid NUMERIC(21, 0)
+	,channelGrouping VARCHAR (50)
+	,socialEngagementType VARCHAR (50)
+	,units_sold INT
+	,pageviews INT
+	,timeonsite FLOAT
+	,bounces INT
+	,revenue FLOAT
+	,unit_price FLOAT
+	,PRIMARY KEY (visitID)
+)
+
+
+
+
+
 > #### Note
 > We have gone over the ways that you can import a .csv file into the PostgreSQL database but [this resource](https://www.youtube.com/watch?v=6Jf7eTkIaR4) summarizes it, in case you need a refresher.
 
