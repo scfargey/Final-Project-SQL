@@ -7,6 +7,8 @@ Create a new PostgreSQL database called `ecommerce`. Set up tables for each .csv
 
 
 
+--DROP TABLE products
+
 CREATE TABLE products (
 	 SKU VARCHAR (20)
 	,ProductName VARCHAR (50)
@@ -20,7 +22,7 @@ CREATE TABLE products (
 
 );
 
-DROP TABLE sales_by_sku
+--DROP TABLE sales_by_sku
 
 CREATE TABLE sales_by_sku (
 	 SKU VARCHAR (20)
@@ -48,9 +50,10 @@ CREATE TABLE sales_report (
 
 );
 
+--DROP TABLE all_sessions;
 
 CREATE TABLE all_Sessions (
-	 fullVisitorId BIGINT
+	 fullVisitorId FLOAT
 	,channelGrouping VARCHAR (25)
 	,sessiontime NUMERIC
 	,country VARCHAR (50)
@@ -87,7 +90,7 @@ CREATE TABLE all_Sessions (
 
 );
 
-
+--DROP TABLE ANALYTICS
 CREATE TABLE ANALYTICS (
 	 visitNumber NUMERIC(21, 0)
 	,visitId FLOAT
