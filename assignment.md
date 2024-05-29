@@ -188,6 +188,8 @@ WITH cleaned_data AS (
 UPDATE analytics -- completed
 SET unit_price = unit_price / 1000000;
 
+UPDATE analytics -- completed
+SET revenue = revenue / 1000000;
 
 
 ALTER TABLE analytics -- make time column readable
@@ -197,6 +199,19 @@ USING '00:00:00'::time + (visitstarttime || ' seconds')::interval;
 ALTER TABLE analytics -- make time column readable
 ALTER COLUMN timeonsite TYPE TIME
 USING '00:00:00'::time + (timeonsite || ' seconds')::interval;
+
+UPDATE all_sessions
+SET city = 'Unknown'
+WHERE city = 'not available in demo dataset';
+
+UPDATE all_sessions
+SET city = 'Unknown'
+WHERE city = '(not set)';
+
+UPDATE all_sessions
+SET country = 'Unknown'
+WHERE country = '(not set)';
+
 
 ## Part 3: Starting with Questions
 
