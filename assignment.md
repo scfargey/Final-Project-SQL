@@ -52,12 +52,12 @@ CREATE TABLE sales_report (
 CREATE TABLE all_Sessions (
 	 fullVisitorId FLOAT
 	,channelGrouping VARCHAR (25)
-	,sessiontime NUMERIC
+	,sessiontime INT
 	,country VARCHAR (50)
 	,city VARCHAR (50)
 	,totalTransactionRevenue FLOAT
 	,transactions FLOAT
-	,timeOnSite FLOAT
+	,timeOnSite INT
 	,pageviews INT
 	,sessionQualityDim INT
 	,sessiondate DATE
@@ -167,6 +167,16 @@ In your copy of the **cleaning_data.md** file, describe what issues you addresse
 UPDATE all_sessions
 SET productprice = productprice / 1000000;
 
+UPDATE all_sessions 
+SET totalTransactionRevenue = totalTransactionRevenue / 1000000;
+
+UPDATE all_sessions 
+SET productRevenue = Product Revenue / 1000000;
+
+UPDATE all_sessions 
+SET transactionRevenue = transactionRevenue / 1000000;
+
+--cleaning data for analytics
 --clean and push data to the actual analytics table, so their is a primary key
 WITH cleaned_data AS (
     SELECT DISTINCT ON (visitId, unit_price) -- ensuring no duplicate primary keys
@@ -175,8 +185,18 @@ WITH cleaned_data AS (
     ORDER BY visitId, unit_price
 )
 
-UPDATE analytics
+UPDATE analytics -- completed
 SET unit_price = unit_price / 1000000;
+
+
+
+ALTER TABLE analytics -- make time column readable
+ALTER COLUMN visitstarttime TYPE TIME
+USING '00:00:00'::time + (visitstarttime || ' seconds')::interval;
+
+ALTER TABLE analytics -- make time column readable
+ALTER COLUMN timeonsite TYPE TIME
+USING '00:00:00'::time + (timeonsite || ' seconds')::interval;
 
 ## Part 3: Starting with Questions
 
