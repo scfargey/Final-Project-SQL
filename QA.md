@@ -61,3 +61,21 @@ GROUP BY p.SKU
 HAVING COUNT(p.SKU)>1
 
 --the analytics table has no primary key or combination of columns for a primary key, so at this point is a useless table of data
+
+--the all_sessions table has a mix of three columns for a primary key, us this query to ensure no duplicates
+SELECT
+    visitId,
+    productSKU,
+    sessiontime,
+    COUNT(*) AS cnt
+FROM
+    all_Sessions
+GROUP BY
+    visitId,
+    productSKU,
+    sessiontime
+HAVING
+    COUNT(*) > 1;
+
+
+--if i was to redeisgn this database i would need a better understanding of where this data is coming from and then ensure it is in 3NF by splitting the tables accordingly. 
